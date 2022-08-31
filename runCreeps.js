@@ -1,5 +1,6 @@
 module.exports = {
     runCreeps: function(){
+        console.log('running creeps...');
         for (let name in Game.creeps){
             let creep = Game.creeps[name];
             let spawn = creep.memory.spawn;

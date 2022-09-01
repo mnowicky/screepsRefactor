@@ -8,11 +8,12 @@ module.exports = {
     },
 
     purgeRooms: function(){
-        for(let room in Memory.rooms){
+        delete Memory.rooms;
+        /*for(let room in Memory.rooms){
             if(Game.rooms[room] == undefined){
                 delete Memory.rooms[room];
             }
-        }
+        }*/
     },
 
     purgeSpawns: function(){
@@ -25,6 +26,7 @@ module.exports = {
 
     purgeAll: function(){
         if(Game.time % 100 === 0){
+            console.log('purging cache...');
             this.purgeRooms();
             this.purgeSpawns();
         }

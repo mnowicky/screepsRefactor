@@ -1,5 +1,6 @@
 module.exports = {
     purgeCreeps: function(){
+        //remove dead creeps from memory
         for(let name in Memory.creeps){
             if(Game.creeps[name] == undefined){
                 delete Memory.creeps[name];
@@ -17,6 +18,7 @@ module.exports = {
     },
 
     purgeSpawns: function(){
+        //remove destroyed spawns from memory
         for(let spawn in Memory.spawns){
             if(Game.spawns[spawn] == undefined){
                 delete Memory.spawns[spawn];
@@ -25,12 +27,13 @@ module.exports = {
     },
 
     purgeAll: function(){
-        if(Game.time % 100 === 0){
-            console.log('purging cache...');
+        if(Game.time % 80 === 0){
+            console.log('purging memory of destroyed spawns...');
             this.purgeRooms();
             this.purgeSpawns();
         }
-        if(Game.time % 10 === 0){
+        if(Game.time % 25 === 0){
+            console.log('purging memory of dead creeps...');
             this.purgeCreeps();
         }
     }

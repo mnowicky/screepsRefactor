@@ -1,3 +1,5 @@
+const roleHarvester = require('role.harvester');
+
 module.exports = {
     runCreeps: function(){
         console.log('running creeps...');

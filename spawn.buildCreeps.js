@@ -1,9 +1,7 @@
 module.exports = {
     genBalancedCreep: function(energy, roleName, spawnName, spawnObj){
         var spwn = spawnObj;
-        if(energy < 300){
-            var energy = 300;
-        }
+
         var numParts = Math.floor(energy / 200);
         console.log(numParts);
         numParts = Math.min(numParts,16);

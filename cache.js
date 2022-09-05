@@ -31,7 +31,7 @@ module.exports = {
                 Memory.spawns[name] = {};
                 Memory.spawns[name].name = spawn.name;
                 Memory.spawns[name].room = spawn.room.name;
-                Memory.spawns[name].queue = ['empty'];
+                Memory.spawns[name].queue = ['harvester'];
             }
         }
     },

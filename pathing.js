@@ -95,11 +95,11 @@ class PathingManager {
 			return ERR_INVALID_ARGS;
 		}
 
-		/* if (!instance.body.some(
+		 if (!instance.body.some(
 			part => part.type === MOVE && part.hits > 0
 		)) {
 			return ERR_NO_BODYPART;
-		} */
+		}
 
 		const memory = creep.memory;
 		const {pos: creepPos, room, fatigue} = instance;

@@ -13,7 +13,7 @@ var rmLvlConfig = {
             role: 'upgrader'
         },
         builder: {
-            qty: 5, 
+            qty: 0, 
             body: '[WORK, CARRY, MOVE]',
             bodyCost: 200,
             role: 'builder'
@@ -21,17 +21,17 @@ var rmLvlConfig = {
     }, 
     2: {
         harvester: {
-            qty: 20,
+            qty: 8,
             body: '[WORK, CARRY, MOVE]',
             bodyCost: 200
         }, 
         upgrader: {
-            qty: 2,
+            qty: 0,
             body: '[WORK, CARRY, MOVE]', 
             bodyCost: 200
         }, 
         builder: {
-            qty: 2,
+            qty: 0,
             body: '[WORK,WORK,CARRY,CARRY,MOVE,MOVE]',
             bodyCost: 400
         }

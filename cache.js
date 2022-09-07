@@ -1,5 +1,4 @@
-var settings = require('config.settings');
-
+var utils = require('utils');
 
 module.exports = {
     cacheRoom: function (){
@@ -7,22 +6,35 @@ module.exports = {
         for(let name in Game.rooms){
             let rm = Game.rooms[name];
             var sources = rm.find(FIND_SOURCES);
-            var terrain = rm.getTerrain();
+
             if(!Memory.rooms[name]){
                 Memory.rooms[name] = {};
                 Memory.rooms[name].structures = {};
                 Memory.rooms[name].rcl = rm.controller.level;
+
+                //cache room sources and their surrounding terrain
                 Memory.rooms[name].sources = [];
-                Memory.rooms[name].terrain = terrain;
-                Memory.rooms[name].sourcesSurroundingTerrain = [];
+                var openPositionsCount = [];
+
                 for(source of sources){
                     Memory.rooms[name].sources.push(source);
-                }
-                for(s of Memory.rooms[name].sources){
-                    let surroundingTerrain = this.returnSurroundingTerrain(s.pos.x, s.pos.y);
-                    Memory.rooms[name].sourcesSurroundingTerrain = surroundingTerrain;
+                    
+                    //returns array of position tile types (swamp, wall, plains)
+                    var positionTypes = utils.returnSurroundingTerrain(source);
+                    var count = 0;
 
+                    //count number of type types considered 'open' and count them, push to array
+                    for(c = 0; c < positionTypes.length; c++){
+                        if(positionTypes[c] == "plain" || positionTypes[c] == "swamp"){
+                            count++;
+                        }
+                    }
+                    openPositionsCount.push(count);
 
+                    //write the open positions count to memory for each source
+                    for(i=0;i<openPositionsCount.length;i++){
+                        Memory.rooms[name].sources[i].openPositions = openPositionsCount[i];
+                    }
                 }
             }
         }
@@ -48,34 +60,6 @@ module.exports = {
                 Memory.spawns[name].queue = ['harvester'];
             }
         }
-    },
-
-    returnSurroundingTerrain: function(x, y){
-        let surroundingArray = [];
-        let surroundingArrayTerrain = [];
-        let pos1 = {x: x+1, y: y};
-        let pos2 = {x: x+1, y: y-1};
-        let pos3 = {x: x, y: y-1};
-        let pos4 = {x: x-1, y: y-1};
-        let pos5 = {x: x-1, y: y};
-        let pos6 = {x: x-1, y: y+1};
-        let pos7 = {x: x, y: y+1};
-        let pos8 = {x: x+1, y: y+1};
-        surroundingArray = [pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8];
-
-        for(pos of surroundingArray){
-            switch(terrain.get(pos[x], pos[y])){
-                case TERRAIN_MASK_WALL:
-                    surroundingArrayTerrain.push('WALL');
-                case TERRAIN_MASK_SWAMP:
-                    surroundingArrayTerrain.push('OPEN');
-                case 0:
-                    surroundingArrayTerrain.push('OPEN');
-            }
-
-        }
-        return surroundingArrayTerrain;
-
     },
 
     cacheAll: function(){

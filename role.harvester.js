@@ -1,12 +1,7 @@
+var manager = require('creep.manager');
+
 module.exports = {
     rcl1: function(creep, working){
-        //decide whether or not too many creeps exist in current room
-        //if so, set memory object to designate creeps who seek energy in surrounding rooms
-        if(!creep.memory.destination){
-
-        }
-
-
         if(working == true){
             let targets = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (s) => (s.structureType == STRUCTURE_SPAWN 
@@ -28,10 +23,17 @@ module.exports = {
             }
         }
         else{
-            let src = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+            if(creep.memory.isAssigned == true){
+                let src = Game.getObjectById(creep.memory.sourceAssignment);
+                if(creep.harvest(src)!=OK){
+                    creep.moveTo(src);
+                }
+
+            }
+            /*let src = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
             if(creep.harvest(src) != OK){
                 creep.moveTo(src);
-            }
+            }*/
         }
         
     }, 
@@ -52,11 +54,8 @@ module.exports = {
         
 
         if(rcl == 1 || 2){
+            manager.harvesterAssignSource(creep);
             this.rcl1(creep, isWorking);
         }
-        else if(rcl == 2){
-            this.rcl2(creep, isWorking);
-        }
-
     }
 }

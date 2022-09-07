@@ -20,7 +20,7 @@ module.exports = {
             let numUpgraders = _.sum(creepsInRoom, (c) => c.memory.role == 'upgrader');
             let numBuilders = _.sum(creepsInRoom, (c) => c.memory.role == 'builder');
 
-            if(numHarvesters < rmLvlConfig[rcl].harvester.qty){
+            if(numHarvesters < rmLvlConfig[rcl].harvester.qty && queue.includes('harvester') == false){
                 queue.push('harvester');
             }
             if(numBuilders < rmLvlConfig[rcl].builder.qty && queue.includes('builder') == false){

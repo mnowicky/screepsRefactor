@@ -9,7 +9,7 @@ module.exports.loop = function () {
     /*if(Game.cpu.bucket == 10000){
         Game.cpu.generatePixel();
     }*/
-    delete Memory.rooms;
+    //delete Memory.rooms;
     purgeCache.purgeAll();
     runCache.cacheAll();
     runSpawnQueues.runQueues();

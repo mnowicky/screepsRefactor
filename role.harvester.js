@@ -23,17 +23,16 @@ module.exports = {
             }
         }
         else{
-            if(creep.memory.isAssigned == true){
+            if(creep.memory.sourceAssignment && creep.memory.sourceAssignment != 'searching...'){
                 let src = Game.getObjectById(creep.memory.sourceAssignment);
                 if(creep.harvest(src)!=OK){
                     creep.moveTo(src);
                 }
 
             }
-            /*let src = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
-            if(creep.harvest(src) != OK){
-                creep.moveTo(src);
-            }*/
+            else{
+                manager.findExternalSources(creep);
+            }
         }
         
     }, 

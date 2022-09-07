@@ -58,5 +58,40 @@ module.exports = {
             }
         });
         return res;
+    }, 
+    returnAdjacentRoom: function(rmName){
+        var nameArr = [];
+        var adjacentRoomChoices = [];
+        for(char of rmName){
+            nameArr.push(char);
+        }
+        console.log(nameArr);
+        var directionX = nameArr[0];
+        var numeralX = Number(nameArr[1]);
+        console.log(numeralX+1);
+        var directionY = nameArr[2];
+        var numeralY = Number(nameArr[3]);
+
+        if(numeralX > 0 && numeralY > 0){
+            console.log('true');
+            var north = directionX+numeralX+directionY+(numeralY+1);
+            var south = String(directionX+numeralX+directionY+(numeralY-1));
+            var east = String(directionX+(numeralX-1)+directionY+numeralY);
+            var west = String(directionX+(numeralX+1)+directionY+numeralY);
+            console.log(north + ' ' + south + ' ' + east + ' ' + west);
+
+        }
+
+        adjacentRoomChoices = [north, south, east, west];
+        let randomIndex = this.returnRandomNumberInRange(0,3);
+        let randomRoomChoice = adjacentRoomChoices[randomIndex];
+        console.log(randomRoomChoice);
+        return randomRoomChoice;
+
+
+
+    }, 
+    returnRandomNumberInRange: function(min, max){
+        return Math.random() * (max-min) + min;
     }
 }

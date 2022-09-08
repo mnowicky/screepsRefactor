@@ -2,27 +2,34 @@ var manager = require('creep.manager');
 
 module.exports = {
     rcl1: function(creep, working){
+        let spawn = creep.memory.spawn;
+        let homeRoom = Memory.spawns[spawn].room;
         if(working == true){
-            let targets = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (s) => (s.structureType == STRUCTURE_SPAWN 
-                || s.structureType == STRUCTURE_EXTENSION
-                || s.structureType == STRUCTURE_TOWER)
-                && s.energy < s.energyCapacity
-            });
+            if(creep.room.name == homeRoom){
+                let targets = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                    filter: (s) => (s.structureType == STRUCTURE_SPAWN 
+                    || s.structureType == STRUCTURE_EXTENSION
+                    || s.structureType == STRUCTURE_TOWER)
+                    && s.energy < s.energyCapacity
+                });
 
-            if(targets){
-                if(creep.transfer(targets, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-                    creep.moveTo(targets);
-                    return;
+                if(targets){
+                    if(creep.transfer(targets, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                        creep.moveTo(targets);
+                        return;
+                    }
+                }
+                else{
+                    if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE){
+                        creep.moveTo(creep.room.controller);
+                    }
                 }
             }
             else{
-                if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE){
-                    creep.moveTo(creep.room.controller);
-                }
+                //code to go back to home room
             }
         }
-        else{
+        else if(working == false){
             if(creep.memory.sourceAssignment && creep.memory.sourceAssignment != 'searching...'){
                 let src = Game.getObjectById(creep.memory.sourceAssignment);
                 if(creep.harvest(src)!=OK){

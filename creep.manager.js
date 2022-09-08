@@ -59,9 +59,42 @@ module.exports = {
         var creepSpawn = creep.memory.spawn;
         var homeRoom = Game.spawns[creepSpawn].room.name;
         var currentRoom = creep.room.name;
-        console.log(homeRoom);
-        var randomAdjacentRoom = utils.returnAdjacentRoom(currentRoom);
-        console.log(randomAdjacentRoom);
+        //if not in homeroom, if currentroom is not cached, cache the room.
+        if(currentRoom != homeRoom){
+            if(!Memory.rooms[currentRoom]){
+                Memory.rooms[currentRoom] = {};
+                Memory.rooms[currentRoom].sources = creep.room.find(FIND_SOURCES_ACTIVE);
+            }
+
+        }
+
+        if(!creep.memory.targetRoom){
+            var randomAdjacentRoom = utils.returnAdjacentRoom(currentRoom);
+            creep.memory.targetRoom = randomAdjacentRoom;
+            return;
+        }
+
+        if(creep.room.name != creep.memory.targetRoom){
+            const exitDir = creep.room.findExitTo(creep.memory.targetRoom);
+            console.log('exitdir:'+exitDir);
+            const exit = creep.pos.findClosestByRange(exitDir);
+            console.log(exit);
+            creep.moveTo(exit);
+            return;
+        }
+        else{
+            if(!creep.memory.remoteSource){
+                let remoteSource = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+                if(creep.harvest(remoteSource) == ERR_NOT_IN_RANGE){
+                    creep.moveTo(remoteSource);
+                }
+
+            }
+
+        }
+        
+        
+
         
     }
 }

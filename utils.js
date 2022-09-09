@@ -59,13 +59,12 @@ module.exports = {
         });
         return res;
     }, 
-    returnAdjacentRoom: function(rmName){
+    returnAdjacentRooms: function(rmName){
         var nameArr = [];
         var adjacentRoomChoices = [];
         for(char of rmName){
             nameArr.push(char);
         }
-
         var directionX = nameArr[0];
         var numeralX = Number(nameArr[1]);
         var directionY = nameArr[2];
@@ -79,18 +78,32 @@ module.exports = {
         }
 
         adjacentRoomChoices = [north, south, east, west];
+        return adjacentRoomChoices;
+
+    },
+    returnRandomAdjacentRoom: function(rmName){
+        let options = this.returnAdjacentRooms(rmName);
         let randomIndex = this.returnRandomNumberInRange(0,4);
-        let randomRoomChoice = adjacentRoomChoices[randomIndex];
+        let randomRoomChoice = options[randomIndex];
         return randomRoomChoice;
-    }, 
+    },
+    returnRandomRoomWithExit: function(rmName){
+        let index = Game.rooms[rmName].memory.adjacentRooms.length;
+        let randomIndex = this.returnRandomNumberInRange(0, index);
+        let adjacentRooms = Game.rooms[rmName].memory.adjacentRooms;
+        return adjacentRooms[randomIndex];
+    },
     returnRandomNumberInRange: function(min, max){
         return Math.floor(Math.random() * (max-min) + min);
-    }
-    ,
+    },
+    returnExits: function(rmName){
+        const exits = Game.map.describeExits(rmName);
+        return exits;
+    },
+
     initRoom: function(){
         if(hasRespawned() == true){
-            Memory = {};
-            RawMemory.set("");
+            Memory.initComplete = true;
         }
     }
 }

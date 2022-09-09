@@ -1,4 +1,5 @@
 const roleHarvester = require('role.harvester');
+const roleBuilder = require('role.builder');
 
 module.exports = {
     runCreeps: function(){
@@ -10,6 +11,9 @@ module.exports = {
             if(!creep.spawning){
                 if(creep.memory.role == 'harvester') {
                     roleHarvester.run(creep);
+                }
+                if(creep.memory.role == 'builder'){
+                    roleBuilder.run(creep);
                 }
             }
         }

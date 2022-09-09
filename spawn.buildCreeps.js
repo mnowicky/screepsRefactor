@@ -3,7 +3,7 @@ module.exports = {
         var spwn = spawnObj;
 
         var numParts = Math.floor(energy / 200);
-        console.log(numParts);
+        //console.log(numParts);
         numParts = Math.min(numParts,16);
         var body = [];
         for(let i = 0; i  < numParts; i++){
@@ -15,7 +15,7 @@ module.exports = {
         for(let i = 0; i < numParts; i++){
             body.push(MOVE);
         }
-        console.log(body);
+        //console.log(body);
         return spwn.spawnCreep(body, roleName+'_'+this.makeId(6), {memory: {role: roleName, working: false, spawn: spawnName}});
     }, 
     makeId: function(length){
@@ -28,3 +28,4 @@ module.exports = {
         return res;
     }
 }
+

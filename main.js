@@ -12,10 +12,11 @@ module.exports.loop = function () {
         Game.cpu.generatePixel();
     }*/
     //printResourceUsage();
-    delete Memory.creepMinimums;
-
-    utils.initRoom();
-    
+    if(!Memory.initComplete){
+        utils.initRoom();
+    }
+    //delete Memory.rooms;
+    //delete Memory.spawns;
     purgeCache.cleanMemory();
     runCache.cacheAll();
     runSpawnQueues.runQueues();

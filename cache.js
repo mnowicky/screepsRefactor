@@ -5,12 +5,25 @@ module.exports = {
         //cache room details to memory
         for(let name in Game.rooms){
             let rm = Game.rooms[name];
+            var rmName = rm.name;
+            let rcl = rm.controller.level;
             var sources = rm.find(FIND_SOURCES);
 
+
+            if(!Memory.utils){
+                Memory.utils = {};
+                Memory.utils.initMemWipe = true;
+            }
             if(!Memory.rooms[name]){
                 Memory.rooms[name] = {};
                 Memory.rooms[name].structures = {};
                 Memory.rooms[name].rcl = rm.controller.level;
+                if(rcl < 4){
+                    Memory.rooms[name].lowRCL = true;
+                }
+                else{
+                    Memory.rooms[name] = false;
+                }
 
                 //cache room sources and their surrounding terrain
                 Memory.rooms[name].sources = [];
@@ -36,6 +49,28 @@ module.exports = {
                         Memory.rooms[name].sources[i].openPositions = openPositionsCount[i];
                     }
                 }
+
+                //cache surrounding rooms
+                let exits = utils.returnExits(rmName)
+                let exitsArr = [];
+                Memory.rooms[name].exits = {};
+                if(exits[1]){
+                    Memory.rooms[name].exits.top = exits[1];
+                    exitsArr.push(exits[1]);
+                }
+                if(exits[3]){
+                    Memory.rooms[name].exits.right = exits[3];
+                    exitsArr.push(exits[3]);
+                }
+                if(exits[5]){
+                    Memory.rooms[name].exits.bottom = exits[5];
+                    exitsArr.push(exits[5]);
+                }
+                if(exits[7]){
+                    Memory.rooms[name].exits.left = exits[7];
+                    exitsArr.push(exits[7]);
+                }
+                Memory.rooms[name].adjacentRooms = exitsArr;
             }
         }
     },

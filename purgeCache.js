@@ -6,7 +6,6 @@ module.exports = {
                 delete Memory.creeps[name];
             }
         }
-        delete Memory.creepMinimums;
     },
 
     purgeSpawns: function(){
@@ -18,15 +17,6 @@ module.exports = {
         }
     },
 
-    purgeAll: function(){
-        RawMemory.set('{}');
-        Memory.creeps = {};
-        Memory.rooms = {};
-        Memory.flags = {};
-        Memory.spawns = {};
-        Memory.creepMinimums = {};
-    },
-
     cleanMemory: function(){
         if(Game.time % 100 === 0){
             this.purgeSpawns();
@@ -35,7 +25,8 @@ module.exports = {
             this.purgeCreeps();
         }
         if(Game.time % 1000 === 0){
-            this.purgeAll();
+            delete Memory.spawns;
+            delete Memory.rooms;
         }
     }
 }

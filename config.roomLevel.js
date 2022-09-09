@@ -32,8 +32,8 @@ var rmLvlConfig = {
         }, 
         builder: {
             qty: 0,
-            body: '[WORK,WORK,CARRY,CARRY,MOVE,MOVE]',
-            bodyCost: 400
+            body: '[WORK,CARRY,MOVE]',
+            bodyCost: 200
         }
     }
 }

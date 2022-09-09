@@ -10,29 +10,20 @@ module.exports = {
             for(s=0;s<sources.length;s++){
                 var assignments = 0;
                 //retrieve number of open positions around it
-                console.log(Memory.rooms[roomName].sources[s]);
+                //console.log(Memory.rooms[roomName].sources[s]);
                 let openPositions = Memory.rooms[roomName].sources[s].openPositions;
-                console.log('open positions 2: '+openPositions);
                 //for each existing creep in the game, check for memory assignment matching that source id
                 for(var name in Game.creeps){
-                    console.log(name);
                     var existingCreeps = Game.creeps[name];
                     //for each matching creep assigned to a specific source id, iterate the counter.
                     if(existingCreeps.memory.sourceAssignment == sources[s].id){
                         assignments++;
                         //if number of creeps assigned to a source == number of open positions, do nothing
-                        if(assignments == openPositions){
+                        if(assignments == (openPositions+2)){
                             creep.memory.sourceAssignment = 'searching...';
                             break
                         };
                     }
-                    /*else{
-                        if(assignments < openPositions){
-                            creep.memory.sourceAssignment = sources[s].id;
-                            creep.memory.isAssigned = true;
-                            break;
-                        }
-                    }*/
                 }
                 if(assignments < openPositions){
                     creep.memory.sourceAssignment = sources[s].id;
@@ -67,19 +58,15 @@ module.exports = {
             }
 
         }
-
         if(!creep.memory.targetRoom){
-            var randomAdjacentRoom = utils.returnAdjacentRoom(currentRoom);
+            var randomAdjacentRoom = utils.returnRandomRoomWithExit(currentRoom);
             creep.memory.targetRoom = randomAdjacentRoom;
             return;
         }
 
         if(creep.room.name != creep.memory.targetRoom){
-            const exitDir = creep.room.findExitTo(creep.memory.targetRoom);
-            console.log('exitdir:'+exitDir);
-            const exit = creep.pos.findClosestByRange(exitDir);
-            console.log(exit);
-            creep.moveTo(exit);
+            let targetRm = creep.memory.targetRoom;
+            creep.moveTo(new RoomPosition(25, 25, targetRm));
             return;
         }
         else{
@@ -88,13 +75,7 @@ module.exports = {
                 if(creep.harvest(remoteSource) == ERR_NOT_IN_RANGE){
                     creep.moveTo(remoteSource);
                 }
-
             }
-
         }
-        
-        
-
-        
     }
 }

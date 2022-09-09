@@ -4,8 +4,6 @@ module.exports = {
     rcl1: function(creep, working){
         let spawn = creep.memory.spawn;
         let homeRoom = Memory.spawns[spawn].room;
-        console.log(homeRoom);
-        console.log(creep.room.name);
         if(working == true){
             if(creep.room.name == homeRoom){
                 let targets = creep.pos.findClosestByRange(FIND_STRUCTURES, {
@@ -52,6 +50,11 @@ module.exports = {
     run: function(creep){
         var isWorking = creep.memory.working;
         let rcl = creep.room.controller.level;
+        let spawn = creep.memory.spawn;
+        let homeRoom = Memory.spawns[spawn].room;
+        if(creep.room.name == homeRoom){
+            manager.harvesterAssignSource(creep);
+        }
 
         if(creep.store[RESOURCE_ENERGY] == creep.store.getCapacity() && creep.memory.working == false){
             creep.memory.working = true;
@@ -61,8 +64,7 @@ module.exports = {
         }
         
 
-        if(rcl == 1 || 2){
-            manager.harvesterAssignSource(creep);
+        if(rcl == 1 || rcl == 2){
             this.rcl1(creep, isWorking);
         }
     }

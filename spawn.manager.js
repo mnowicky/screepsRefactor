@@ -15,13 +15,8 @@ module.exports = {
             var energyAvail = rm.energyAvailable;
             var rcl = spawn.room.controller.level;
             var creepsInRoom = spawn.room.find(FIND_MY_CREEPS);
-            if(rcl < 4){
-                Memory.rooms[rmName].lowRCL = true;
-            }
-            else{
-                Memory.rooms[rmName].lowRCL = false;
-            }
-
+            
+            //console.log(harvesterCount);
             //decide creep minimums
             creepMinimums.run(spawn);
 
@@ -30,19 +25,19 @@ module.exports = {
             let numUpgraders = _.sum(creepsInRoom, (c) => c.memory.role == 'upgrader');
             let numBuilders = _.sum(creepsInRoom, (c) => c.memory.role == 'builder');
 
-            if(numHarvesters < rmLvlConfig[rcl].harvester.qty && queue.includes('harvester') == false){
+            if(numHarvesters < Memory.rooms[rmName].creepMinimums.minHarvesters && queue.includes('harvester') == false){
                 queue.push('harvester');
             }
-            if(numBuilders < rmLvlConfig[rcl].builder.qty && queue.includes('builder') == false){
+            if(numBuilders < Memory.rooms[rmName].creepMinimums.minBuilders && queue.includes('builder') == false){
                 queue.push('builder');
             }
-            if(numUpgraders < rmLvlConfig[rcl].qty && queue.includes('upgrader') == false){
+            if(numUpgraders < Memory.rooms[rmName].creepMinimums.minUpgraders && queue.includes('upgrader') == false){
                 queue.push('upgrader');
             }
 
             //run spawn queue
             //if there are creeps in the spawn queue... identify role and body cost.
-            if(queue && queue.length>0){
+            if(queue && queue.length>0 && Memory.utils.initMemWipe == true){
                 let firstQueued = queue[0];
                 let spawnCost = rmLvlConfig[rcl][firstQueued].bodyCost;
                 

@@ -28,6 +28,10 @@ global.hasRespawned = function hasRespawned(){
         return false;
     }
     // if all cases point to a respawn, you've respawned
+    delete Memory.spawns;
+    delete Memory.rooms;
+    delete Memory.utils;
+    delete Memory.creeps;
     Memory.respawnTick = Game.time;
     return true;
 }

@@ -4,6 +4,8 @@ module.exports = {
     rcl1: function(creep, working){
         let spawn = creep.memory.spawn;
         let homeRoom = Memory.spawns[spawn].room;
+        console.log(homeRoom);
+        console.log(creep.room.name);
         if(working == true){
             if(creep.room.name == homeRoom){
                 let targets = creep.pos.findClosestByRange(FIND_STRUCTURES, {

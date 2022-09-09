@@ -86,4 +86,11 @@ module.exports = {
     returnRandomNumberInRange: function(min, max){
         return Math.floor(Math.random() * (max-min) + min);
     }
+    ,
+    initRoom: function(){
+        if(hasRespawned() == true){
+            Memory = {};
+            RawMemory.set("");
+        }
+    }
 }

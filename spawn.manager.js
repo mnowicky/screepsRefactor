@@ -1,5 +1,6 @@
 var buildCreep = require('spawn.buildCreeps');
 const rmLvlConfig = require('config.roomLevel');
+const creepMinimums = require('spawn.creepMinimums');
 
 module.exports = {
     runQueues: function(){
@@ -14,6 +15,15 @@ module.exports = {
             var energyAvail = rm.energyAvailable;
             var rcl = spawn.room.controller.level;
             var creepsInRoom = spawn.room.find(FIND_MY_CREEPS);
+            if(rcl < 4){
+                Memory.rooms[rmName].lowRCL = true;
+            }
+            else{
+                Memory.rooms[rmName].lowRCL = false;
+            }
+
+            //decide creep minimums
+            creepMinimums.run(spawn);
 
             //queue necessary creeps
             let numHarvesters = _.sum(creepsInRoom, (c) => c.memory.role == 'harvester');

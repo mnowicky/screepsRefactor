@@ -6,7 +6,10 @@ module.exports = {
         for(let name in Game.rooms){
             let rm = Game.rooms[name];
             var rmName = rm.name;
-            let rcl = rm.controller.level;
+            var isMyRoom = Game.rooms[rmName] && Game.rooms[rmName].controller && Game.rooms[rmName].controller.my;
+            if(isMyRoom){
+                var rcl = rm.controller.level;
+            }
             var sources = rm.find(FIND_SOURCES);
 
 
@@ -17,12 +20,17 @@ module.exports = {
             if(!Memory.rooms[name]){
                 Memory.rooms[name] = {};
                 Memory.rooms[name].structures = {};
-                Memory.rooms[name].rcl = rm.controller.level;
-                if(rcl < 4){
-                    Memory.rooms[name].lowRCL = true;
+                if(isMyRoom){
+                    Memory.rooms[name].rcl = rcl;
+                    if(rcl && rcl < 4){
+                        Memory.rooms[name].lowRCL = true;
+                    }
+                    else if(rcl && rcl >= 4){
+                        Memory.rooms[name].lowRCL = false;
+                    }
                 }
                 else{
-                    Memory.rooms[name] = false;
+                    Memory.rooms[name].lowRCL = 'unowned';
                 }
 
                 //cache room sources and their surrounding terrain
@@ -95,6 +103,62 @@ module.exports = {
                 Memory.spawns[name].queue = ['harvester'];
             }
         }
+    },
+
+    manuallyCacheRoom: function(rmName){
+        rm = Game.rooms[rmName];
+        var sources = rm.find(FIND_SOURCES);
+        if(!Memory.rooms[rmName]){
+            Memory.rooms[rmName] = {};
+            Memory.rooms[rmName].lowRCL = true;
+            Memory.rooms[rmName].sources = [];
+            var openPositionsCount = [];
+
+            for(source of sources){
+                Memory.rooms[rmName].sources.push(source);
+                
+                //returns array of position tile types (swamp, wall, plains)
+                var positionTypes = utils.returnSurroundingTerrain(source);
+                var count = 0;
+
+                //count number of type types considered 'open' and count them, push to array
+                for(c = 0; c < positionTypes.length; c++){
+                    if(positionTypes[c] == "plain" || positionTypes[c] == "swamp"){
+                        count++;
+                    }
+                }
+                openPositionsCount.push(count);
+
+                //write the open positions count to memory for each source
+                for(i=0;i<openPositionsCount.length;i++){
+                    Memory.rooms[rmName].sources[i].openPositions = openPositionsCount[i];
+                }
+            }
+
+            //cache surrounding rooms
+            let exits = utils.returnExits(rmName)
+            let exitsArr = [];
+            Memory.rooms[rmName].exits = {};
+            if(exits[1]){
+                Memory.rooms[rmName].exits.top = exits[1];
+                exitsArr.push(exits[1]);
+            }
+            if(exits[3]){
+                Memory.rooms[rmName].exits.right = exits[3];
+                exitsArr.push(exits[3]);
+            }
+            if(exits[5]){
+                Memory.rooms[rmName].exits.bottom = exits[5];
+                exitsArr.push(exits[5]);
+            }
+            if(exits[7]){
+                Memory.rooms[rmName].exits.left = exits[7];
+                exitsArr.push(exits[7]);
+            }
+            Memory.rooms[rmName].adjacentRooms = exitsArr;
+
+        }
+
     },
 
     cacheAll: function(){

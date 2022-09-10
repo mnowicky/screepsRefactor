@@ -24,9 +24,5 @@ module.exports = {
         if(Game.time % 25 === 0){
             this.purgeCreeps();
         }
-        if(Game.time % 1000 === 0){
-            delete Memory.spawns;
-            delete Memory.rooms;
-        }
     }
 }

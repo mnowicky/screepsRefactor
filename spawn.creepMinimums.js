@@ -13,7 +13,6 @@ module.exports = {
                     for(src of sources){
                         let openPos = Number(src.openPositions);
                         count = count+openPos;
-                        count = count+2;
                     }
                     Memory.rooms[rmName].creepMinimums.minHarvesters = count;
                 }

@@ -1,4 +1,5 @@
 var utils = require('utils');
+const cache = require('./cache');
 
 module.exports = {
     harvesterAssignSource(creep){
@@ -19,7 +20,7 @@ module.exports = {
                     if(existingCreeps.memory.sourceAssignment == sources[s].id){
                         assignments++;
                         //if number of creeps assigned to a source == number of open positions, do nothing
-                        if(assignments == (openPositions+2)){
+                        if(assignments >= openPositions){
                             creep.memory.sourceAssignment = 'searching...';
                             break
                         };
@@ -50,32 +51,32 @@ module.exports = {
         var creepSpawn = creep.memory.spawn;
         var homeRoom = Game.spawns[creepSpawn].room.name;
         var currentRoom = creep.room.name;
-        //if not in homeroom, if currentroom is not cached, cache the room.
-        if(currentRoom != homeRoom){
-            if(!Memory.rooms[currentRoom]){
-                Memory.rooms[currentRoom] = {};
-                Memory.rooms[currentRoom].sources = creep.room.find(FIND_SOURCES_ACTIVE);
-            }
-
+        if(!creep.memory.roomsExplored){
+            creep.memory.roomsExplored = [homeRoom];
+        }
+        if(!creep.memory.currentRoom){
+            creep.memory.currentRoom = currentRoom;
+        }
+        //if not in homeroom, or previous current room, if currentroom is not cached, cache the room.
+        if(currentRoom != homeRoom || creep.room.name !== creep.memory.currentRoom){
+            creep.memory.currentRoom = creep.room.name;
+            creep.memory.roomsExplored.push(creep.room.name);
         }
         if(!creep.memory.targetRoom){
             var randomAdjacentRoom = utils.returnRandomRoomWithExit(currentRoom);
-            creep.memory.targetRoom = randomAdjacentRoom;
+            if(randomAdjacentRoom !== homeRoom && creep.memory.roomsExplored.includes(randomAdjacentRoom) == false){
+                creep.memory.targetRoom = randomAdjacentRoom;
+            }
             return;
+        }
+        else if(creep.memory.targetRoom == homeRoom){
+            delete creep.memory.targetRoom;
         }
 
         if(creep.room.name != creep.memory.targetRoom){
             let targetRm = creep.memory.targetRoom;
             creep.moveTo(new RoomPosition(25, 25, targetRm));
             return;
-        }
-        else{
-            if(!creep.memory.remoteSource){
-                let remoteSource = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
-                if(creep.harvest(remoteSource) == ERR_NOT_IN_RANGE){
-                    creep.moveTo(remoteSource);
-                }
-            }
         }
     }
 }

@@ -103,7 +103,7 @@ module.exports = {
 
     initRoom: function(){
         if(hasRespawned() == true){
-            Memory.initComplete = true;
+            return;
         }
     }
 }

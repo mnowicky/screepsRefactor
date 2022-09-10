@@ -1,5 +1,14 @@
 module.exports = {
     rcl1_2: function(creep, working){
+        //check if rcl changed, if yes set 
+        if(creep.memory.roomRCL != creep.room.controller.level){
+            creep.memory.buildNewStructures = true;
+        }
+        else{
+            creep.memory.buildNewStructures = false;
+        }
+
+
         if(working == true){
             delete creep.memory.harvestSource;
             if(!creep.memory.constructionSite){
@@ -7,11 +16,19 @@ module.exports = {
                 if(closestSite){
                     creep.memory.constructionSite = closestSite.id;
                 }
-                return;
             }
             let cSite = Game.getObjectById(creep.memory.constructionSite);
-            if(creep.build(cSite) == ERR_NOT_IN_RANGE){
-                creep.moveTo(cSite);
+            if(cSite){
+                if(creep.build(cSite) == ERR_NOT_IN_RANGE){
+                    creep.moveTo(cSite);
+                }
+                return;
+            }
+            else{
+                delete creep.memory.contructionSite;
+                if(creep.upgradeController(creep.room.controller) != OK){
+                    creep.moveTo(creep.room.controller);
+                }
             }
         }
         else if(working == false){
@@ -44,18 +61,22 @@ module.exports = {
         }
     },
 
+    placeNewStructures: function(creep){
+        console.log('placeholder');
+    },
+
     run: function(creep){
         var working = creep.memory.working;
         var rcl = creep.room.controller.level;
+        //cache rcl so creep knows when more upgrades/structures are available
+        if(!creep.memory.roomRCL){
+            creep.memory.roomRCL = rcl;
+        }
         if(creep.store[RESOURCE_ENERGY] == creep.store.getCapacity() && creep.memory.working == false){
             creep.memory.working = true;
         }
         else if(creep.store[RESOURCE_ENERGY] == 0 && creep.memory.working == true){
             creep.memory.working = false;
-        }
-
-        if(Game.time % 50 === 0){
-            delete creep.memory.contructionSites;
         }
 
         if(!creep.memory.constructionSites){
@@ -70,6 +91,10 @@ module.exports = {
             else{
                 creep.memory.constructionSites = 'none';
             }
+        }
+
+        if(rcl != creep.memory.roomRCL){
+            this.placeNewStructures(creep);
         }
 
         if(rcl == 1 || rcl == 2){

@@ -3,7 +3,7 @@ const cache = require('./cache');
 
 module.exports = {
     harvesterAssignSource(creep){
-        if(!creep.memory.sourceAssignment){
+        if(!creep.memory.sourceAssignment || (creep.room.name == creep.memory.targetRoom && creep.memory.sourceAssignment == 'searching...')){
             var roomName = creep.room.name;
             var sources = Memory.rooms[roomName].sources;
     

@@ -1,13 +1,14 @@
 module.exports = {
     rcl1_2: function(creep, working){
         //check if rcl changed, if yes set 
+        /*
         if(creep.memory.roomRCL != creep.room.controller.level){
             creep.memory.buildNewStructures = true;
         }
         else{
             creep.memory.buildNewStructures = false;
         }
-
+        */
 
         if(working == true){
             delete creep.memory.harvestSource;
@@ -52,7 +53,7 @@ module.exports = {
                 delete creep.memory.harvestSource;
             }
 
-            let roads = creep.pos.findInRange(FIND_STRUCTURES, 2, {filter: (s) => s.structureType == STRUCTURE_ROAD});
+            let roads = creep.pos.findInRange(FIND_STRUCTURES, 1, {filter: (s) => s.structureType == STRUCTURE_ROAD});
             if(roads.length == 0 || !roads.length){
                 let posX = creep.pos.x;
                 let posY = creep.pos.y;
@@ -61,7 +62,7 @@ module.exports = {
         }
     },
 
-    placeNewStructures: function(creep){
+    checkNewAvailableStructures: function(creep){
         console.log('placeholder');
     },
 
@@ -94,7 +95,7 @@ module.exports = {
         }
 
         if(rcl != creep.memory.roomRCL){
-            this.placeNewStructures(creep);
+            this.checkNewAvailableStructures(creep);
         }
 
         if(rcl == 1 || rcl == 2){

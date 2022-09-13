@@ -27,13 +27,13 @@ module.exports = {
                         var numBuilders = 2;
                     }
                     else if(numCSites >=5){
-                        var numBuilders = 4;
+                        var numBuilders = 3;
                     }
                     Memory.rooms[rmName].creepMinimums.minBuilders = numBuilders;
                 }
                 if(!Memory.rooms[rmName].creepMinimums.minUpgraders){
                     if(rcl >= 3){
-                        var numUpgraders = 2;
+                        var numUpgraders = 0;
                     }
                     else{
                         var numUpgraders = 0;
@@ -42,5 +42,18 @@ module.exports = {
                 }
             }
         }
+    },
+
+    returnNumberOfQueuedType: function(spawn, role){
+        var spawnName = spawn.name;
+        var queue = Memory.spawns[spawnName].queue;
+        var counts = {};
+        for(let count of queue){
+            counts[count] = counts[count] ? counts[count] + 1 : 1;
+        }
+        if(counts[role] == undefined){
+            counts[role] = 0;
+        }
+        return counts[role];
     }
 }

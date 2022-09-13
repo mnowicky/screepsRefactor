@@ -105,5 +105,57 @@ module.exports = {
         if(hasRespawned() == true){
             return;
         }
+    }, 
+    createRoadFromTo: function(creep, posA, posB){
+        //const direction = creep.pos.getDirectionTo(target);
+        //creep.move(direction);
+        //or
+        //const path = creep.pos.findPathTo(targetPos, {ignoreCreeps:true, maxOps: 200});
+        //or
+        //const path = creep.pos.findPathTo(x, y, {opts:true});
+        //or
+        //const path = creep.pos.findPath(creepPos, targetPos, {opts: true});
+
+        /*
+        if(!path.length || !targetPos.isEqualTo(path[path.length-1])){
+            path = creep.room.findPath(creep.pos, targetPos, {maxOps: 200, ignoreCreeps: true});
+        }
+        if(path.length){
+            creep.move(path[0].direction);
+        }
+        */
+       const path = creep.room.findPath(posA, posB);
+       var pathArr = [];
+       for(i=0; i<path.length; i++){
+            var posX = path[i].x;
+            var posY = path[i].y;
+            var posArr = [posX, posY];
+            pathArr.push(posArr);
+       }
+       console.log('Path array for createRoadFromTo: ' + pathArr);
+       for(position of pathArr){
+            creep.room.createContructionSite(position[0], position[1], STRUCTURE_ROAD);
+       }
+       return
+       //creep.move(path[0].direction);
+    }, 
+    createRoadTo: function(creep, target){
+        var path = creep.pos.findPathTo(target);
+        var pathArr = [];
+        for(i=0; i<path.length; i++){
+            var posX = path[i].x;
+            var posY = path[i].y;
+            var posArr = [posX, posY];
+            pathArr.push(posArr);
+        }
+        console.log('Path array for createRoadTo: '+ pathArr);
+        for(pos of pathArr){
+            creep.room.createContructionSite(pos[0], pos[1], STRUCTURE_ROAD);
+        }
+        return;
+    },
+    returnPathTo: function(creep, target){
+        const path = creep.pos.findPathTo(target);
+        return path;
     }
 }

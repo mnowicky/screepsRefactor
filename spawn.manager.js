@@ -16,22 +16,30 @@ module.exports = {
             var rcl = spawn.room.controller.level;
             var creepsInRoom = spawn.room.find(FIND_MY_CREEPS);
             
-            //console.log(harvesterCount);
             //decide creep minimums
             creepMinimums.run(spawn);
 
-            //queue necessary creeps
+            //number of each role currently in queue...
+            var queuedHarvesters = creepMinimums.returnNumberOfQueuedType(spawn, 'harvester');
+            var queuedBuilders = creepMinimums.returnNumberOfQueuedType(spawn, 'builder');
+            var queuedUpgraders = creepMinimums.returnNumberOfQueuedType(spawn, 'upgrader');
+
+            //number of each role in the home room...
             let numHarvesters = _.sum(creepsInRoom, (c) => c.memory.role == 'harvester');
             let numUpgraders = _.sum(creepsInRoom, (c) => c.memory.role == 'upgrader');
             let numBuilders = _.sum(creepsInRoom, (c) => c.memory.role == 'builder');
 
-            if(numHarvesters < Memory.rooms[rmName].creepMinimums.minHarvesters && queue.includes('harvester') == false){
+            console.log(Number(numHarvesters) + Number(queuedHarvesters));
+            console.log(Memory.rooms[rmName].creepMinimums.minHarvesters + 6);
+
+            //modify the + number to dictate how many extra external room harvesters you have
+            if((numHarvesters + queuedHarvesters) < Memory.rooms[rmName].creepMinimums.minHarvesters + 6){
                 queue.push('harvester');
             }
-            if(numBuilders < Memory.rooms[rmName].creepMinimums.minBuilders && queue.includes('builder') == false){
+            if((numBuilders + queuedBuilders) < Memory.rooms[rmName].creepMinimums.minBuilders){
                 queue.push('builder');
             }
-            if(numUpgraders < Memory.rooms[rmName].creepMinimums.minUpgraders && queue.includes('upgrader') == false){
+            if((numUpgraders + queuedUpgraders) < Memory.rooms[rmName].creepMinimums.minUpgraders){
                 queue.push('upgrader');
             }
 
